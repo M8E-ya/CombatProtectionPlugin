@@ -1,0 +1,5 @@
+name: CombatProtectionPlugin
+version: '${project.version}'
+main: com.gmail.perpltxed.combatprotectionplugin.CombatProtectionPlugin
+api-version: 1.18
+authors: [ Perpltxed ]
