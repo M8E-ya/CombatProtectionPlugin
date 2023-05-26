@@ -2,7 +2,6 @@ package com.gmail.perpltxed.combatprotectionplugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -27,7 +26,19 @@ public class CombatProtectionPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        getLogger().info("CombatProtectionPlugin has been enabled.");
         getServer().getPluginManager().registerEvents(this, this);
+    }
+
+    @Override
+    public void onDisable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            removePvPCooldown(player);
+        }
+        bossBars.values().forEach(BossBar::removeAll);
+        bossBars.clear();
+        pvpCooldowns.clear();
+        getLogger().info("CombatProtectionPlugin has been disabled.");
     }
 
     @EventHandler
@@ -125,6 +136,7 @@ public class CombatProtectionPlugin extends JavaPlugin implements Listener {
         }
     }
 }
+
 
 
 
