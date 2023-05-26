@@ -2,9 +2,12 @@ package com.gmail.perpltxed.combatprotectionplugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -133,6 +136,38 @@ public class CombatProtectionPlugin extends JavaPlugin implements Listener {
         if (bossBar != null) {
             bossBar.removeAll();
             bossBars.remove(player.getUniqueId());
+        }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("togglebossbar")) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage(ChatColor.RED + "This command can only be used by players.");
+                return true;
+            }
+
+            Player player = (Player) sender;
+            if (hasPvPCooldown(player)) {
+                sender.sendMessage(ChatColor.RED + "You cannot disable the boss bar while in combat.");
+                return true;
+            }
+
+            toggleBossBar(player);
+            return true;
+        }
+        return false;
+    }
+
+    private void toggleBossBar(Player player) {
+        BossBar bossBar = bossBars.get(player.getUniqueId());
+        if (bossBar != null) {
+            bossBar.removeAll();
+            bossBars.remove(player.getUniqueId());
+            player.sendMessage(ChatColor.YELLOW + "The boss bar has been disabled.");
+        } else {
+            startBossBar(player);
+            player.sendMessage(ChatColor.YELLOW + "The boss bar has been enabled.");
         }
     }
 }

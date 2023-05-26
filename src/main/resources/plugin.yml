@@ -3,3 +3,7 @@ version: '${project.version}'
 main: com.gmail.perpltxed.combatprotectionplugin.CombatProtectionPlugin
 api-version: 1.18
 authors: [ Perpltxed ]
+commands:
+  togglebossbar:
+    description: Toggles bossbar on/off
+    usage: /togglebossbar
