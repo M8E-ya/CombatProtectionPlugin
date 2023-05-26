@@ -2,6 +2,7 @@ package com.gmail.perpltxed.combatprotectionplugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -50,6 +52,20 @@ public class CombatProtectionPlugin extends JavaPlugin implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = event.getEntity();
         removePvPCooldown(player);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        if (hasPvPCooldown(player)) {
+            Player target = Bukkit.getPlayer(pvpCooldowns.get(player.getUniqueId()));
+            if (target != null) {
+                target.sendMessage(ChatColor.GREEN + "Your opponent has disconnected. The combat ends!");
+                player.setHealth(0);
+                removePvPCooldown(player);
+                removePvPCooldown(target);
+            }
+        }
     }
 
     private boolean hasPvPCooldown(Player player) {
@@ -109,6 +125,7 @@ public class CombatProtectionPlugin extends JavaPlugin implements Listener {
         }
     }
 }
+
 
 
 
